@@ -4,8 +4,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import axios from "axios";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 export default function LoginPage() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -51,11 +53,12 @@ export default function LoginPage() {
           }
         );
         toast.success("Login successful!");
+        navigate("/");
         console.log(response.data);
       } catch (error) {
         // toast.error(error.response.data.msg);
         // console.error(error.response.data.msg);
-        console.error(error)
+        console.error(error);
       }
     }
   };

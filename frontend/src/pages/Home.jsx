@@ -1,7 +1,12 @@
-import React from 'react'
+import axios from "axios";
+import React, { useEffect } from "react";
 
 export default function Home() {
-  return (
-    <div>Home</div>
-  )
+  useEffect(() => {
+    axios.get("/api/users").then((response) => {
+      console.log(response);
+    });
+  }, []);
+
+  return <div>Home</div>;
 }
