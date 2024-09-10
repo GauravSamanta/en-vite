@@ -1,0 +1,69 @@
+// schema.prisma
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id           String         @id @default(uuid())
+  email        String         @unique
+  password     String
+  firstName    String
+  lastName     String
+  events       Event[]        @relation("UserEvents")
+  rsvps        RSVP[]
+  invitations  Invitation[]
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  Notification Notification[]
+}
+
+model Event {
+  id          String       @id @default(uuid())
+  title       String
+  description String?
+  location    String?
+  date        DateTime
+  time        String
+  isPrivate   Boolean      @default(false)
+  organizer   User         @relation("UserEvents", fields: [organizerId], references: [id])
+  organizerId String
+  attendees   RSVP[]
+  invitations Invitation[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model RSVP {
+  id        Int      @id @default(autoincrement())
+  status    String // e.g., "Going", "Not Going", "Maybe"
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  event     Event    @relation(fields: [eventId], references: [id])
+  eventId   String
+  createdAt DateTime @default(now())
+}
+
+model Invitation {
+  id        String   @id @default(uuid())
+  event     Event    @relation(fields: [eventId], references: [id])
+  eventId   String
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  status    String   @default("Pending") // e.g., "Accepted", "Rejected"
+  createdAt DateTime @default(now())
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  message   String
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
