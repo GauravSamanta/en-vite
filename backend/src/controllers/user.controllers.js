@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 import { asyncHandler } from "../helpers/asyncHandler.js";
 
 export const getUser = asyncHandler(async (req, res) => {
-  res.json(["Hello User"]);
+  return res.json({ user: req.user });
 });
 
 export const registerUser = asyncHandler(async (req, res) => {
